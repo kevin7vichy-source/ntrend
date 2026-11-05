@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>HARTHELM｜家舵 · 永天伟／Keep Moving 身份维护看板（A-C-99 · Quiet Harbor ）</title>
+<style>
+:root{
+  --bg:#0B1220;
+  --bg-elev:#111A2B;
+  --glass:rgba(255,255,255,0.09);
+  --glass-strong:rgba(255,255,255,0.12);
+  --border:rgba(255,255,255,0.14);
+  --border-soft:rgba(255,255,255,0.08);
+  --text:#E8EEF7;
+  --muted:#9AA8BD;
+  --muted2:#6E7C91;
+  --accent:#3DD6C6;
+  --accent-dim:rgba(61,214,198,0.18);
+  --gold:#B08D57;
+  --gold-line:rgba(176,141,87,0.55);
+  --status-need:#E5A84B;
+  --status-wait:#8B95A7;
+  --status-review:#5B9BD5;
+  --status-ok:#3CB371;
+  --status-na:#6E7C91;
+  --radius:14px;
+  --shadow:0 8px 32px rgba(0,0,0,0.35);
+  --font:"PingFang SC","Noto Sans SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:ui-monospace,"SF Mono","IBM Plex Mono","Menlo",Consolas,monospace;
+  --skyline-opacity:0.09;
+  --gold-weight:1px;
+  --accent-intensity:1;
+}
+[data-board="keepmoving"]{
+  --accent:#2ED3C0;
+  --accent-dim:rgba(46,211,192,0.22);
+  --skyline-opacity:0.11;
+  --gold-weight:1px;
+  --gold-line:rgba(176,141,87,0.62);
+  --accent-intensity:1.08;
+}
+/* family block */
+.family-card{padding:16px 18px;margin-bottom:18px}
+.family-card h3{margin:0 0 8px;font-size:14px;font-weight:500}
+.family-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.family-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:999px;font-size:13px;
+  border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text);
+}
+.family-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.family-note{font-size:12px;color:var(--muted2);margin-top:8px;line-height:1.55}
+.company-sub{font-size:11px;color:var(--muted2);font-weight:400;margin-left:6px}
+.date-big.pending{color:var(--status-need);font-size:30px}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font)}
+body{position:relative;overflow-x:hidden}
+button,input{font-family:inherit}
+.skyline{
+  position:fixed;left:0;right:0;bottom:0;height:140px;pointer-events:none;z-index:0;
+  opacity:var(--skyline-opacity);color:#9FB4D0;
+}
+.skyline svg{width:100%;height:100%;display:block}
+.app{position:relative;z-index:1;min-height:100vh}
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px 48px}
+
+/* —— Login —— */
+.login-view{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;
+}
+.login-card{
+  width:min(420px,100%);
+  background:var(--glass-strong);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px 32px 28px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:var(--gold-weight) solid var(--gold-line);
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .login-card,.glass{background:rgba(17,26,43,0.92)}
+}
+.brand-lockup{text-align:center;margin-bottom:22px}
+.brand-en{font-size:22px;letter-spacing:0.18em;font-weight:600}
+.brand-zh{color:var(--gold);font-size:15px;letter-spacing:0.12em;margin-top:6px}
+.login-title{text-align:center;font-size:15px;color:var(--muted);margin:0 0 18px}
+.lock-note{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:13px;color:var(--muted);margin-bottom:18px;
+}
+.lock-note .ico{width:16px;height:16px;color:var(--accent)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.field input{
+  width:100%;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--border);background:rgba(0,0,0,0.25);color:var(--text);
+  outline:none;font-size:14px;
+}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:none;cursor:pointer;border-radius:10px;padding:11px 16px;font-size:14px;
+  transition:background .2s, opacity .2s, transform .15s;
+}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{width:100%;background:var(--accent);color:#06201C;font-weight:600}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06)}
+.btn-ghost{
+  background:transparent;color:var(--muted);border:1px solid var(--border-soft);
+  padding:6px 10px;font-size:12px;border-radius:8px;
+}
+.btn-ghost:hover{color:var(--text);border-color:var(--border)}
+.btn-demo{
+  margin-top:10px;width:100%;background:transparent;color:var(--muted);
+  border:1px dashed var(--border);font-size:12px;
+}
+.login-hint{margin-top:14px;font-size:12px;color:var(--muted2);text-align:center;line-height:1.5}
+.badge-proto{
+  display:inline-block;margin-top:16px;padding:3px 8px;border-radius:999px;
+  border:1px solid var(--border);color:var(--muted2);font-size:11px;
+}
+
+/* —— Top bar —— */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 0 14px;border-bottom:1px solid var(--border-soft);margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.top-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand-sm .en{font-size:16px;letter-spacing:0.14em;font-weight:600}
+.brand-sm .zh{color:var(--gold);margin-left:6px;font-size:13px;letter-spacing:0.08em}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--muted);padding:4px 10px;border-radius:999px;
+  border:1px solid var(--border-soft);background:rgba(255,255,255,0.03);
+}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hello{font-size:14px;color:var(--text)}
+.domain{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  padding:4px 8px;border-radius:6px;background:rgba(0,0,0,0.25);border:1px solid var(--border-soft);
+}
+.domain em{font-style:normal;color:var(--status-need);margin-left:6px;font-family:var(--font);font-size:11px}
+.select-board{
+  background:rgba(0,0,0,0.28);color:var(--text);border:1px solid var(--border);
+  border-radius:8px;padding:6px 10px;font-size:12px;outline:none;
+}
+.select-board:focus{border-color:var(--accent)}
+
+/* —— Glass cards —— */
+.glass{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 1px 0 rgba(255,255,255,0.04) inset;
+}
+.three{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:18px;
+}
+@media (max-width:980px){.three{grid-template-columns:1fr}}
+.slot{padding:20px 18px 16px;min-height:230px;position:relative}
+.slot.elevated{border-color:rgba(255,255,255,0.18);box-shadow:var(--shadow)}
+.slot-h{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;
+}
+.slot-h h2{margin:0;font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0.04em}
+.stage-tag{
+  display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;
+  font-size:11px;color:var(--gold);border:var(--gold-weight) solid var(--gold-line);
+  background:rgba(176,141,87,0.08);transition:opacity .35s;
+}
+.stage-tag.is-xfading{opacity:0}
+
+/* Progress ring */
+.ring-wrap{display:flex;align-items:center;gap:18px}
+.ring{
+  width:118px;height:118px;position:relative;flex-shrink:0;
+}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:rgba(255,255,255,0.08);stroke-width:8}
+.ring-val{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;
+  stroke-dasharray:314;stroke-dashoffset:314;transition:stroke-dashoffset .8s ease}
+.reduce-motion .ring-val,.reduce-motion *{transition:none !important;animation:none !important}
+.ring-center{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.ring-pct{font-family:var(--mono);font-size:28px;font-weight:600;letter-spacing:-0.02em;line-height:1}
+.ring-pct span{font-size:14px;color:var(--muted);margin-left:1px}
+.ring-sub{font-size:11px;color:var(--muted2);margin-top:4px}
+.ring-meta{font-size:13px;color:var(--muted);line-height:1.55}
+.ring-meta strong{color:var(--text);font-weight:500}
+
+/* Gaps */
+.gap-list{list-style:none;margin:0;padding:0}
+.gap-list li{
+  display:grid;grid-template-columns:10px 1fr;gap:10px;align-items:start;
+  padding:9px 0;border-bottom:1px solid var(--border-soft);font-size:13px;
+  transition:opacity .4s, transform .4s, max-height .4s, padding .4s, border .4s;
+  max-height:80px;overflow:hidden;
+}
+.gap-list li.leaving{opacity:0;transform:translateX(8px);max-height:0;padding-top:0;padding-bottom:0;border:0}
+.gap-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;background:var(--status-need)}
+.gap-what{color:var(--text);font-weight:500}
+.gap-meta{color:var(--muted2);font-size:12px;margin-top:2px}
+.gap-empty{color:var(--muted);font-size:13px;padding:24px 0;text-align:center}
+.gap-actions{margin-top:10px}
+
+/* Date slot */
+.date-big{
+  font-family:var(--mono);font-size:34px;font-weight:600;letter-spacing:-0.02em;
+  line-height:1.1;margin:6px 0 8px;
+}
+.date-note{font-size:12px;color:var(--gold);margin-bottom:10px}
+.days-left{
+  font-family:var(--mono);font-size:22px;color:var(--accent);font-weight:600;
+}
+.days-left.pulse{animation:gentlePulse 2.4s ease-in-out infinite}
+@keyframes gentlePulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.72}
+}
+.date-sub{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6}
+.date-sub b{color:var(--text);font-weight:500}
+
+
+/* Policy weekly (港新每周政策更新) */
+.policy-bar{
+  margin:0 0 18px;padding:16px 18px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:14px 18px;align-items:start;
+}
+@media (max-width:720px){.policy-bar{grid-template-columns:1fr}}
+.policy-kicker{
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+  border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius:999px;padding:4px 10px;white-space:nowrap;align-self:center;
+}
+.policy-body{min-width:0}
+.policy-body h3{margin:0 0 6px;font-size:14px;font-weight:600;color:var(--text)}
+.policy-body p{margin:0;font-size:13px;line-height:1.55;color:var(--muted)}
+.policy-meta{font-size:11px;color:var(--muted2);white-space:nowrap;align-self:center;text-align:right}
+.policy-meta em{font-style:normal;color:var(--gold);margin-left:4px}
+
+/* Materials */
+.materials{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;
+}
+@media (max-width:900px){.materials{grid-template-columns:1fr}}
+.mat-card{padding:18px}
+.mat-card h3{margin:0 0 12px;font-size:14px;font-weight:500}
+.mat-list{list-style:none;margin:0;padding:0}
+.mat-item{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:9px 0;border-bottom:1px solid var(--border-soft);font-size:13px;
+}
+.mat-item:last-child{border-bottom:none}
+.mat-left{display:flex;align-items:center;gap:10px;min-width:0}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.status-dot.need{background:var(--status-need)}
+.status-dot.wait{background:var(--status-wait)}
+.status-dot.review{background:var(--status-review)}
+.status-dot.ok{background:var(--status-ok)}
+.status-dot.na{
+  background:transparent;border:1.5px dashed var(--status-na);border-radius:50%;
+}
+.status-label{font-size:12px;white-space:nowrap}
+.status-label.need{color:var(--status-need)}
+.status-label.wait{color:var(--status-wait)}
+.status-label.review{color:var(--status-review)}
+.status-label.ok{color:var(--status-ok)}
+.status-label.na{color:var(--status-na)}
+.fold{
+  margin-top:8px;width:100%;text-align:left;
+  background:rgba(255,255,255,0.03);border:1px dashed var(--border-soft);
+  color:var(--muted);border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;
+}
+.fold:hover{color:var(--text);border-color:var(--border)}
+.fold-panel{display:none;margin-top:4px}
+.fold-panel.open{display:block}
+
+/* Lower */
+.lower{
+  display:grid;grid-template-columns:1.1fr 0.9fr;gap:16px;margin-bottom:24px;
+}
+@media (max-width:900px){.lower{grid-template-columns:1fr}}
+.lower-card{padding:18px}
+.lower-card h3{margin:0 0 4px;font-size:14px;font-weight:500}
+.pub-badge{
+  display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--status-ok);
+  margin-bottom:12px;
+}
+.pub-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--status-ok)}
+.advice{margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--text)}
+.advice li{margin-bottom:4px}
+.diag-text{font-size:13px;line-height:1.7;color:var(--muted);margin:0}
+
+/* Footer */
+.footer{
+  text-align:center;padding:20px 12px 8px;border-top:1px solid var(--border-soft);
+}
+.slogan{letter-spacing:0.28em;font-size:12px;color:var(--muted);margin-bottom:8px}
+.disclaimer{font-size:11px;color:var(--muted2);line-height:1.6;max-width:720px;margin:0 auto}
+.proto-bar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:8px 28px;background:rgba(8,12,20,0.92);border-bottom:1px solid var(--border-soft);
+  font-size:12px;color:var(--muted2);
+}
+.proto-bar strong{color:var(--status-need);font-weight:500}
+.toggle{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;color:var(--muted);
+}
+.toggle input{accent-color:var(--accent)}
+
+.hidden{display:none !important}
+.check-ok{animation:checkPop .35s ease}
+@keyframes checkPop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+
+.freeze-banner{
+  position:sticky;top:0;z-index:9999;
+  background:linear-gradient(90deg,#7A1F1F 0%,#B33A2B 50%,#7A1F1F 100%);
+  color:#FFF5F0;
+  text-align:center;
+  padding:12px 16px;
+  font-size:14px;font-weight:600;letter-spacing:0.04em;
+  border-bottom:2px solid #E5A84B;
+  box-shadow:0 4px 18px rgba(0,0,0,0.45);
+}
+.freeze-banner span{display:block;font-size:12px;font-weight:500;opacity:.92;margin-top:4px;letter-spacing:0}
+
+</style>
+</head>
+<body>
+<svg class="skyline" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+  <path fill="currentColor" d="M0 140 V98 H40 V72 H52 V98 H70 V88 H88 V60 H98 V88 H120 V98 H150
+    V55 H162 V40 H172 V55 H185 V98 H210 V70 H222 V50 H235 V70 H248 V98 H280
+    V45 H292 V28 H305 V45 H318 V98 H350 V80 H365 V98 H390 V65 H402 V48 H415 V65 H428 V98
+    H460 V58 H475 V35 H488 V20 H500 V35 H512 V58 H528 V98 H560 V75 H575 V98 H600
+    V50 H615 V30 H628 V50 H642 V98 H680 V68 H695 V42 H710 V68 H725 V98 H760
+    V55 H775 V38 H790 V55 H805 V98 H840 V72 H855 V98 H880 V60 H895 V45 H910 V60 H925 V98
+    H960 V50 H975 V25 H990 V50 H1005 V98 H1040 V70 H1055 V98 H1080 V58 H1095 V40 H1110 V58 H1125 V98
+    H1160 V75 H1175 V98 H1200 V62 H1215 V48 H1230 V62 H1245 V98 H1280 V70 H1295 V98
+    H1320 V55 H1335 V35 H1350 V55 H1365 V98 H1400 V80 H1420 V98 H1440 V140 Z"/>
+</svg>
+
+<div class="proto-bar">
+  <div>Quiet Harbor v1.1 · A-C-99 · 永天伟／Keep Moving · <strong>数据截至 2026-11-05（Asia/Macau）</strong> · ntrend.vip/status/</div>
+  <label class="toggle" title="关闭后动效瞬时切换；亦跟随系统「减少动态」">
+    <input type="checkbox" id="reduceMotionToggle"/> 减少动态
+  </label>
+</div>
+
+<div class="app" id="app" data-board="keepmoving">
+
+  <!-- LOGIN -->
+  <section class="login-view" id="loginView">
+    <div class="login-card">
+      <div class="brand-lockup">
+        <div class="brand-en">HARTHELM</div>
+        <div class="brand-zh">｜家舵</div>
+      </div>
+      <p class="login-title">身份维护看板</p>
+      <div class="lock-note">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        密码保护 · 仅本人
+      </div>
+      <div class="field">
+        <label for="pwd">访问密码</label>
+        <input id="pwd" type="password" placeholder="请输入密码" autocomplete="off"/>
+      </div>
+      <p id="loginErr" style="display:none;color:#b91c1c;font-size:13px;text-align:center;margin:8px 0 0"></p>
+      <button class="btn btn-primary" id="loginBtn" type="button">进入看板</button>
+      <p class="login-hint">请输入顾问提供的访问密码。<br/>本页仅作资料准备进度展示，不构成任何获批承诺。</p>
+      <div style="text-align:center"><span class="badge-proto">INTERNAL PREVIEW · NOT LIVE · A-C-99</span></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section class="hidden" id="dashView">
+    <div class="wrap">
+      <header class="topbar">
+        <div class="top-left">
+          <div class="brand-sm"><span class="en">HARTHELM</span><span class="zh">｜家舵</span></div>
+          <span class="pill"><span class="dot"></span>密码保护 · 仅本人</span>
+        </div>
+        <div class="top-right">
+          <span class="hello" id="honorific">您好，主申请人</span>
+          <span class="pill" style="border-color:var(--gold-line);color:var(--gold)">永天伟／Keep Moving</span>
+          <span class="domain" id="domainLabel">ntrend.vip/status<em></em></span>
+          <button class="btn btn-ghost" id="logoutBtn" type="button">退出</button>
+        </div>
+      </header>
+
+      <!-- THREE SLOTS -->
+      <div class="three" id="threeSlots">
+        <section class="glass slot elevated" id="slotProgress">
+          <div class="slot-h">
+            <h2>A · 进度</h2>
+            <span class="stage-tag" id="stageTag">资料收集中</span>
+          </div>
+          <div class="ring-wrap">
+            <div class="ring" aria-hidden="true">
+              <svg viewBox="0 0 120 120">
+                <circle class="ring-track" cx="60" cy="60" r="50"/>
+                <circle class="ring-val" id="ringVal" cx="60" cy="60" r="50"/>
+              </svg>
+              <div class="ring-center">
+                <div class="ring-pct"><span id="ringPctNum">0</span><span>%</span></div>
+                <div class="ring-sub">必交已齐</div>
+              </div>
+            </div>
+            <div class="ring-meta">
+              <div><strong id="ringFrac">0 / 0</strong> 项符合</div>
+              <div style="margin-top:6px">分母＝必交且非「不适用」</div>
+              <div>分子＝状态「符合」</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass slot elevated" id="slotGaps">
+          <div class="slot-h">
+            <h2>B · 本周要补</h2>
+            <span style="font-size:11px;color:var(--muted2)">最多 5 条</span>
+          </div>
+          <ul class="gap-list" id="gapList"></ul>
+          <div class="gap-empty hidden" id="gapEmpty">暂无待补项</div>
+          <div class="gap-actions" id="gapActionsNote" style="font-size:11px;color:var(--muted2)">缺口按需补→未交排序；最多展示 5 条</div>
+        </section>
+
+        <section class="glass slot elevated" id="slotDate">
+          <div class="slot-h">
+            <h2>C · 计划递交日</h2>
+          </div>
+          <div class="date-note" id="dateNote"></div>
+          <div class="date-big" id="planDate">—</div>
+          <div>距今 <span class="days-left" id="daysLeft">—</span> 天</div>
+          <div class="date-sub" id="dateSub"></div>
+        </section>
+      </div>
+
+
+      <!-- POLICY WEEKLY · 港新每周政策更新 -->
+      <section class="glass policy-bar" id="policyBar" aria-label="港新每周政策更新">
+        <span class="policy-kicker">港新政策 · 周更</span>
+        <div class="policy-body">
+          <h3 id="policyTitle">—</h3>
+          <p id="policySummary">—</p>
+        </div>
+        <div class="policy-meta">更新 <span id="policyUpdated">—</span><em>占位</em></div>
+      </section>
+
+      <!-- MATERIALS -->
+      <div class="materials">
+        <section class="glass mat-card">
+          <h3>个人资料</h3>
+          <ul class="mat-list" id="personalList"></ul>
+          <button class="fold" id="personalFoldBtn" type="button">已齐 0 项</button>
+          <div class="fold-panel" id="personalFold"></div>
+        </section>
+        <section class="glass mat-card">
+          <h3>公司资料 <span class="company-sub">永天伟国际科技有限公司</span></h3>
+          <ul class="mat-list" id="companyList"></ul>
+          <button class="fold" id="companyFoldBtn" type="button">已齐 0 项</button>
+          <div class="fold-panel" id="companyFold"></div>
+        </section>
+      </div>
+
+
+      <!-- FAMILY -->
+      <section class="glass family-card" id="familyCard" aria-label="家庭随行">
+        <h3>家庭随行</h3>
+        <div class="family-row">
+          <span class="family-chip"><span class="dot"></span>有受养人 · 妻子·女儿</span>
+          <span class="family-chip" style="color:var(--muted)">同批办理 · 结构已确认</span>
+        </div>
+        <p class="family-note">证件／姓名明文不上本板（真名仅受限对照表）。材料索引待开档后补入。</p>
+      </section>
+
+      <!-- LOWER -->
+      <div class="lower">
+        <section class="glass lower-card">
+          <h3>本阶段建议</h3>
+          <div class="pub-badge" style="color:var(--status-need)">整理中</div>
+          <ol class="advice" id="adviceList"></ol>
+        </section>
+        <section class="glass lower-card">
+          <h3>运营诊断摘要</h3>
+          <div class="pub-badge" style="color:var(--status-need)">整理中</div>
+          <p class="diag-text" id="diagText"></p>
+        </section>
+      </div>
+
+      <footer class="footer">
+        <div class="slogan">稳舵远航 · 身份有据</div>
+        <p class="disclaimer">本看板仅展示资料准备进度与内部整理建议，不构成任何获批承诺或结果保证。入境事务处最终审批结果以官方通知为准。HARTHELM｜家舵保留在约定情形下切断访问的权利。访问受密码保护。</p>
+      </footer>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const TODAY = new Date(2026, 10, 5); // 2026-11-05 Asia/Macau
+  const CIRC = 2 * Math.PI * 50;
+
+  const STATUS = {
+    need:   { cls:'need',   label:'需补',   order:0 },
+    wait:   { cls:'wait',   label:'未交',   order:1 },
+    review: { cls:'review', label:'核对中', order:2 },
+    ok:     { cls:'ok',     label:'已齐',   order:3 },
+    na:     { cls:'na',     label:'不适用', order:4 }
+  };
+
+  // A-C-99 永天伟／Keep Moving · 全流程模拟预览 · 数据截至 2026-11-05
+  // 来源：个人画像.md / 公司画像.md / N1N2预览包大纲；无真实扫描索引 → 多为未交／需补
+  const BOARD = {
+    id:'keepmoving',
+    honorific:'您好，主申请人',
+    domain:'ntrend.vip/status',
+    companyShort:'永天伟／Keep Moving',
+    company:'永天伟国际科技有限公司／Keep Moving International Technology Co., Limited',
+    stage:'自雇运营中 → 二续资料收集（窗口前）',
+    planDate:'2028-06-15', // 计划递交窗起点；窗 2028-06-15～07-15
+    planDateLabel:'2028-06-15',
+    planNote:'计划递交窗 2028-06-15～07-15（Kevin 已答；默认取窗内前段齐套）',
+    policyTitle:'高才通二续准备口径（内部示意摘要）',
+    policySummary:'本周无须对客强调的结构性清单变更示意。二续届满 2028-09-15，建议窗口约 2028-06-15 起预留核对与顾问终核时间。本条为内部占位摘要，非官方原文、不构成法律意见；',
+    policyUpdated:'2026-11-05',
+    visaExpiry:'2028-09-15',
+    windowOpen:'约 2028-06-15',
+    latestRef:'待顾问／入境处口径填（本草稿不冒充官方）',
+    visaType:'高才通 B',
+    caseId:'A-C-99',
+    familyLabel:'有受养人 · 妻子·女儿',
+    familyDetail:'妻子·女儿（同批办理；姓名明文不上本板）',
+    personal:[
+      {name:'护照个人资料页（索引）', status:'wait', required:true, who:'开档索引', why:'建档夹未见扫描索引；不新收证件'},
+      {name:'近照', status:'wait', required:true, who:'开档索引', why:'档内未见'},
+      {name:'现签证 / e-Visa 页', status:'wait', required:true, who:'开档索引', why:'一续已完成，二续用页待索引'},
+      {name:'人才办专属问卷／确认通知', status:'wait', required:true, who:'主申请人', why:'窗口前完成即可'},
+      {name:'香港身份证（如有）', status:'wait', required:false, who:'开档索引', why:'待索引'},
+      {name:'住址证明', status:'ok', required:false, who:'主申请人', why:'已核实有电费／租约印花件（2026-11-05收资）；归位可后整理'},
+      {name:'学历证明（索引）', status:'wait', required:false, who:'开档索引', why:'needs_input'},
+      {name:'职业履历要点', status:'ok', required:false, who:'主申请人', why:'Kevin裁定：已离职仍股东；在职证明标旧件；离职证明／说明可选'},
+      {name:'受养人资料（妻子·女儿）', status:'ok', required:false, who:'家庭', why:'护照／通行证／结婚证／出生证有件；姓名明文不上本板；缺逗留通知与同意书→补件'},
+      {name:'PDPO 同意记录', status:'wait', required:false, who:'开档', why:'needs_input'},
+      {name:'本地融入凭证', status:'wait', required:false, who:'主申请人', why:'待补'},
+      {name:'商业计划／身份维护方案书', status:'wait', required:false, who:'顾问侧', why:'窗口前起草'}
+    ],
+    company:[
+      {name:'业务一句话', status:'ok', required:true, who:'公司画像', why:'进出口贸易与咨询（已写入画像）'},
+      {name:'商业登记证 BR（脱敏摘要）', status:'wait', required:true, who:'开档索引', why:'禁止完整号进看板；摘要待补'},
+      {name:'公司注册证明书', status:'wait', required:true, who:'开档索引', why:'待索引'},
+      {name:'银行开户／账户证明', status:'wait', required:true, who:'公司画像', why:'已有线索：有公司银行流水；证明／月结待索引'},
+      {name:'强积金 MPF 状态／供款记录', status:'need', required:false, who:'公司画像', why:'缺独立 MPF 证明；近6月停供待佐证→补件'},
+      {name:'办公证明（如适用）', status:'wait', required:false, who:'开档索引', why:'已有线索：公司宿舍租约有印；待索引'},
+      {name:'周年申报／公司秘书往来', status:'ok', required:false, who:'公司秘书', why:'已有最新商证和周年申报表2025；精读页待补'},
+      {name:'雇工／雇员相关', status:'na', required:false, who:'运营', why:'2026-04后无招聘雇员；本人已离职仍股东'},
+      {name:'经营留痕索引（03_/04_）', status:'wait', required:false, who:'建档树', why:'1–6有经营／7–12无；近半年停摆；索引位已建、件待挂'},
+      {name:'域名与客户站', status:'wait', required:false, who:'基建', why:'设计绑定 ntrend.vip；未建站未指域'}
+    ],
+    advice:[
+      '开档后优先建立材料索引（只用已有材料，不新收证件）',
+      '业务一句话已齐；年审有件；银行月结／税审／MPF 仍缺→见补件清单',
+      '证件／姓名明文不上本板（真名仅受限对照表）；受养人材料待索引',
+      '计划递交窗 2028-06-15～07-15；齐套锚 2028-06-15；届满 2028-09-15',
+      'N2 ops 同步；Kevin裁定已离职仍股东（在职证明=旧件）；禁止造假留痕'
+    ],
+    diag:'全流程真实模拟 · 老板测试客户 A-C-99。主申请人高才通 B（建档真名仅受限对照／画像）；上次延期已完成；现签证届满 2028-09-15；计划递交窗 2028-06-15～07-15。公司：永天伟国际科技有限公司／Keep Moving International Technology Co., Limited；业务进出口贸易与咨询；近12月1–6有／7–12无经营；ntrend.vip。家庭：妻子·女儿（同批办理；证件／姓名明文不上本板）。MPF近6月停；2026-04后无雇员；本人离职仍股东。2026-11-05收资已核实签证届满与公司名；银行／税审／MPF／同意书缺；雇佣已裁定：已离职仍股东（在职证明=旧件）。案例口径：累计接触与服务个案 1000 余个（不以获批计）。不构成获批承诺。'
+  };
+
+  let state = {
+    loggedIn: false,
+    reduceMotion: false,
+    personalFoldOpen: false,
+    companyFoldOpen: false,
+    board: JSON.parse(JSON.stringify(BOARD))
+  };
+
+  const $ = (id)=>document.getElementById(id);
+  const app = $('app');
+
+  function daysBetween(a, b){
+    const ms = Date.UTC(b.getFullYear(),b.getMonth(),b.getDate()) - Date.UTC(a.getFullYear(),a.getMonth(),a.getDate());
+    return Math.round(ms/86400000);
+  }
+  function parseYMD(s){
+    const [y,m,d]=s.split('-').map(Number);
+    return new Date(y, m-1, d);
+  }
+
+  function applyReduceMotionClass(){
+    const sys = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const on = state.reduceMotion || sys;
+    document.documentElement.classList.toggle('reduce-motion', on);
+    document.body.classList.toggle('reduce-motion', on);
+    return on;
+  }
+
+  function requiredItems(board){
+    return [...board.personal, ...board.company].filter(i=>i.required && i.status!=='na');
+  }
+  function progressOf(board){
+    const req = requiredItems(board);
+    const ok = req.filter(i=>i.status==='ok').length;
+    const pct = req.length ? Math.round(ok/req.length*100) : 0;
+    return {ok, total:req.length, pct};
+  }
+  function gapsOf(board){
+    const all = [...board.personal, ...board.company]
+      .filter(i=>i.status==='need' || i.status==='wait')
+      .sort((a,b)=>{
+        const ao = STATUS[a.status].order, bo = STATUS[b.status].order;
+        if(ao!==bo) return ao-bo;
+        const ar = a.required?0:1, br = b.required?0:1;
+        return ar-br;
+      })
+      .map(i=>({
+        name:i.name,
+        who:i.who||'客户侧',
+        why:i.why||(i.status==='need'?'请按说明补交':'待提交'),
+        status:i.status
+      }));
+    return all.slice(0,5);
+  }
+
+  function setRing(pct, animate){
+    const ring = $('ringVal');
+    const num = $('ringPctNum');
+    const offset = CIRC * (1 - pct/100);
+    const reduced = applyReduceMotionClass();
+    if(!animate || reduced){
+      ring.style.transition = 'none';
+      ring.style.strokeDashoffset = String(offset);
+      num.textContent = String(pct);
+      return;
+    }
+    ring.style.transition = 'none';
+    ring.style.strokeDashoffset = String(CIRC);
+    num.textContent = '0';
+    void ring.getBoundingClientRect();
+    ring.style.transition = 'stroke-dashoffset .8s ease';
+    ring.style.strokeDashoffset = String(offset);
+    const start = performance.now();
+    const dur = 800;
+    function tick(t){
+      const p = Math.min(1, (t-start)/dur);
+      num.textContent = String(Math.round(pct * p));
+      if(p<1) requestAnimationFrame(tick);
+      else num.textContent = String(pct);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function renderMaterials(board){
+    function sortItems(arr){
+      return arr.slice().sort((a,b)=>STATUS[a.status].order - STATUS[b.status].order);
+    }
+    function renderList(targetUl, foldPanel, foldBtn, items, foldOpen){
+      const sorted = sortItems(items);
+      const active = sorted.filter(i=>i.status!=='ok' && i.status!=='na');
+      const oks = sorted.filter(i=>i.status==='ok');
+      const nas = sorted.filter(i=>i.status==='na');
+      targetUl.innerHTML = '';
+      active.forEach(i=>{
+        const li = document.createElement('li');
+        li.className = 'mat-item';
+        const reqMark = i.required ? ' <span style="color:var(--muted2);font-size:11px">必交</span>' : '';
+        li.innerHTML = `<div class="mat-left"><span class="status-dot ${STATUS[i.status].cls}"></span><span>${i.name}${reqMark}</span></div><span class="status-label ${STATUS[i.status].cls}">${STATUS[i.status].label}</span>`;
+        targetUl.appendChild(li);
+      });
+      foldBtn.textContent = `已齐 ${oks.length} 项` + (nas.length?` · 不适用 ${nas.length} 项（折叠）`:'');
+      foldPanel.innerHTML = '';
+      [...oks, ...nas].forEach(i=>{
+        const li = document.createElement('div');
+        li.className = 'mat-item';
+        li.innerHTML = `<div class="mat-left"><span class="status-dot ${STATUS[i.status].cls}"></span><span>${i.name}</span></div><span class="status-label ${STATUS[i.status].cls}">${STATUS[i.status].label}</span>`;
+        foldPanel.appendChild(li);
+      });
+      foldPanel.classList.toggle('open', foldOpen);
+    }
+    renderList($('personalList'), $('personalFold'), $('personalFoldBtn'), board.personal, state.personalFoldOpen);
+    renderList($('companyList'), $('companyFold'), $('companyFoldBtn'), board.company, state.companyFoldOpen);
+  }
+
+  function renderGaps(board){
+    const gaps = gapsOf(board);
+    const list = $('gapList');
+    const empty = $('gapEmpty');
+    list.innerHTML = '';
+    if(!gaps.length){
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+    gaps.forEach((g)=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="gap-dot" style="background:${g.status==='need'?'var(--status-need)':'var(--status-wait)'}"></span>
+        <div><div class="gap-what">${g.name}</div><div class="gap-meta">${g.who} · ${g.why}</div></div>`;
+      list.appendChild(li);
+    });
+  }
+
+  function renderBoard(animateRing){
+    const board = state.board;
+    app.dataset.board = 'keepmoving';
+    $('honorific').textContent = board.honorific;
+    $('domainLabel').innerHTML = `${board.domain}<em></em>`;
+
+    const prog = progressOf(board);
+    $('ringFrac').textContent = `${prog.ok} / ${prog.total}`;
+    setRing(prog.pct, !!animateRing);
+    $('stageTag').textContent = board.stage;
+
+    const planEl = $('planDate');
+    const daysEl = $('daysLeft');
+    const daysWrap = daysEl.parentElement;
+    if(!board.planDate){
+      planEl.textContent = board.planDateLabel || '待定';
+      planEl.classList.add('pending');
+      $('dateNote').textContent = board.planNote || '待定 · 窗口约 2028-06-15 起';
+      daysEl.textContent = '—';
+      daysEl.classList.remove('pulse');
+      daysWrap.childNodes[0].textContent = '距计划递交日 ';
+      // ensure trailing hint node
+      let hint = document.getElementById('daysHint');
+      if(!hint){
+        hint = document.createElement('span');
+        hint.id = 'daysHint';
+        hint.style.cssText = 'font-size:12px;color:var(--muted2);margin-left:6px';
+        daysWrap.appendChild(hint);
+      }
+      hint.textContent = '（待定后计算）';
+    } else {
+      planEl.textContent = board.planDate;
+      planEl.classList.remove('pending');
+      $('dateNote').textContent = board.planNote || '';
+      const days = daysBetween(TODAY, parseYMD(board.planDate));
+      daysEl.textContent = String(days);
+      daysEl.classList.toggle('pulse', days <= 30 && !applyReduceMotionClass());
+      const hint = document.getElementById('daysHint');
+      if(hint) hint.textContent = '';
+    }
+    $('dateSub').innerHTML = `签证类型 <b>${board.visaType}</b> · 代号 <b>${board.caseId}</b><br/>签证届满 <b>${board.visaExpiry}</b><br/>建议窗口开日 <b>${board.windowOpen}</b><br/>最迟递交参考 <b>${board.latestRef}</b>`;
+
+    $('policyTitle').textContent = board.policyTitle;
+    $('policySummary').textContent = board.policySummary;
+    $('policyUpdated').textContent = board.policyUpdated;
+
+    renderGaps(board);
+    renderMaterials(board);
+
+    $('adviceList').innerHTML = board.advice.map(a=>`<li>${a}</li>`).join('');
+    $('diagText').textContent = board.diag;
+  }
+
+  function login(){
+    state.loggedIn = true;
+    $('loginView').classList.add('hidden');
+    $('dashView').classList.remove('hidden');
+    const ico = document.querySelector('.lock-note .ico');
+    if(ico && !applyReduceMotionClass()){
+      ico.classList.add('check-ok');
+      setTimeout(()=>ico.classList.remove('check-ok'), 400);
+    }
+    renderBoard(true);
+  }
+
+  function logout(){
+    state.loggedIn = false;
+    $('dashView').classList.add('hidden');
+    $('loginView').classList.remove('hidden');
+    $('pwd').value = '';
+  }
+
+
+  const PASS_HASH = '0a035b709f942cad695b11c9f54c7b0db552f27dbbf53d0af40e0cd9d4fe006b';
+  async function sha256hex(s){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  async function tryLogin(){
+    const v = $('pwd').value.trim();
+    if(!v){ $('pwd').focus(); return; }
+    const h = await sha256hex(v);
+    if(h !== PASS_HASH){
+      const err = $('loginErr');
+      if(err){ err.textContent = '密码不正确'; err.style.display='block'; }
+      $('pwd').value=''; $('pwd').focus();
+      return;
+    }
+    login();
+  }
+
+  $('loginBtn').addEventListener('click', ()=>{ tryLogin(); });
+  $('pwd').addEventListener('keydown', e=>{ if(e.key==='Enter'){ tryLogin(); }});
+  $('logoutBtn').addEventListener('click', logout);
+  $('personalFoldBtn').addEventListener('click', ()=>{
+    state.personalFoldOpen = !state.personalFoldOpen;
+    $('personalFold').classList.toggle('open', state.personalFoldOpen);
+  });
+  $('companyFoldBtn').addEventListener('click', ()=>{
+    state.companyFoldOpen = !state.companyFoldOpen;
+    $('companyFold').classList.toggle('open', state.companyFoldOpen);
+  });
+  $('reduceMotionToggle').addEventListener('change', e=>{
+    state.reduceMotion = e.target.checked;
+    applyReduceMotionClass();
+    if(state.loggedIn) renderBoard(false);
+  });
+
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const syncSys = ()=>{
+    if(mq.matches){
+      $('reduceMotionToggle').checked = true;
+      state.reduceMotion = true;
+    }
+    applyReduceMotionClass();
+  };
+  syncSys();
+  if(mq.addEventListener) mq.addEventListener('change', syncSys);
+  else if(mq.addListener) mq.addListener(syncSys);
+
+  $('ringVal').style.strokeDasharray = String(CIRC);
+  $('ringVal').style.strokeDashoffset = String(CIRC);
+})();
+</script>
+</body>
+</html>
