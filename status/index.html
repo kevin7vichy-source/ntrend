@@ -3,10 +3,17 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-<title>HARTHELM｜家舵 · 永天伟／Keep Moving 身份维护看板（A-C-99 · Quiet Harbor ）</title>
+<!--
+  HARTHELM｜家舵 · Quiet Harbor · 永天伟／Keep Moving · 身份维护看板
+  路径 /status/ · 一客一板 · 客户自有主色（Keep Moving）
+  红线：无证件号/护照号/完整薪金/BR完整号；不露内部执行人员名；不承诺获批。
+-->
+<title>HARTHELM｜家舵 · 永天伟／Keep Moving · 身份维护看板</title>
+<link rel="stylesheet" href="../assets/tokens.css"/>
 <style>
 :root{
+  /* Keep Moving brand family — aligned with ../assets/tokens.css */
+  --brand:#0C4A6E;
   --bg:#0B1220;
   --bg-elev:#111A2B;
   --glass:rgba(255,255,255,0.09);
@@ -16,10 +23,10 @@
   --text:#E8EEF7;
   --muted:#9AA8BD;
   --muted2:#6E7C91;
-  --accent:#3DD6C6;
-  --accent-dim:rgba(61,214,198,0.18);
+  --accent:#2ED3C0;
+  --accent-dim:rgba(46,211,192,0.22);
   --gold:#B08D57;
-  --gold-line:rgba(176,141,87,0.55);
+  --gold-line:rgba(176,141,87,0.62);
   --status-need:#E5A84B;
   --status-wait:#8B95A7;
   --status-review:#5B9BD5;
@@ -29,9 +36,9 @@
   --shadow:0 8px 32px rgba(0,0,0,0.35);
   --font:"PingFang SC","Noto Sans SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif;
   --mono:ui-monospace,"SF Mono","IBM Plex Mono","Menlo",Consolas,monospace;
-  --skyline-opacity:0.09;
+  --skyline-opacity:0.11;
   --gold-weight:1px;
-  --accent-intensity:1;
+  --accent-intensity:1.08;
 }
 [data-board="keepmoving"]{
   --accent:#2ED3C0;
@@ -219,11 +226,7 @@ button,input{font-family:inherit}
 .days-left{
   font-family:var(--mono);font-size:22px;color:var(--accent);font-weight:600;
 }
-.days-left.pulse{animation:gentlePulse 2.4s ease-in-out infinite}
-@keyframes gentlePulse{
-  0%,100%{opacity:1}
-  50%{opacity:0.72}
-}
+/* T5: no pulse — only ring enter + stage tag */
 .date-sub{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6}
 .date-sub b{color:var(--text);font-weight:500}
 
@@ -306,13 +309,12 @@ button,input{font-family:inherit}
 }
 .slogan{letter-spacing:0.28em;font-size:12px;color:var(--muted);margin-bottom:8px}
 .disclaimer{font-size:11px;color:var(--muted2);line-height:1.6;max-width:720px;margin:0 auto}
-.proto-bar{
+.util-bar{
   position:sticky;top:0;z-index:20;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  padding:8px 28px;background:rgba(8,12,20,0.92);border-bottom:1px solid var(--border-soft);
+  display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;
+  padding:8px 28px;background:rgba(8,12,20,0.72);border-bottom:1px solid var(--border-soft);
   font-size:12px;color:var(--muted2);
 }
-.proto-bar strong{color:var(--status-need);font-weight:500}
 .toggle{
   display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;color:var(--muted);
 }
@@ -322,21 +324,10 @@ button,input{font-family:inherit}
 .check-ok{animation:checkPop .35s ease}
 @keyframes checkPop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
 
-.freeze-banner{
-  position:sticky;top:0;z-index:9999;
-  background:linear-gradient(90deg,#7A1F1F 0%,#B33A2B 50%,#7A1F1F 100%);
-  color:#FFF5F0;
-  text-align:center;
-  padding:12px 16px;
-  font-size:14px;font-weight:600;letter-spacing:0.04em;
-  border-bottom:2px solid #E5A84B;
-  box-shadow:0 4px 18px rgba(0,0,0,0.45);
-}
-.freeze-banner span{display:block;font-size:12px;font-weight:500;opacity:.92;margin-top:4px;letter-spacing:0}
 
 </style>
 </head>
-<body>
+<body data-skin="dark">
 <svg class="skyline" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
   <path fill="currentColor" d="M0 140 V98 H40 V72 H52 V98 H70 V88 H88 V60 H98 V88 H120 V98 H150
     V55 H162 V40 H172 V55 H185 V98 H210 V70 H222 V50 H235 V70 H248 V98 H280
@@ -349,8 +340,7 @@ button,input{font-family:inherit}
     H1320 V55 H1335 V35 H1350 V55 H1365 V98 H1400 V80 H1420 V98 H1440 V140 Z"/>
 </svg>
 
-<div class="proto-bar">
-  <div>Quiet Harbor v1.1 · A-C-99 · 永天伟／Keep Moving · <strong>数据截至 2026-11-05（Asia/Macau）</strong> · ntrend.vip/status/</div>
+<div class="util-bar">
   <label class="toggle" title="关闭后动效瞬时切换；亦跟随系统「减少动态」">
     <input type="checkbox" id="reduceMotionToggle"/> 减少动态
   </label>
@@ -377,7 +367,6 @@ button,input{font-family:inherit}
       <p id="loginErr" style="display:none;color:#b91c1c;font-size:13px;text-align:center;margin:8px 0 0"></p>
       <button class="btn btn-primary" id="loginBtn" type="button">进入看板</button>
       <p class="login-hint">请输入顾问提供的访问密码。<br/>本页仅作资料准备进度展示，不构成任何获批承诺。</p>
-      <div style="text-align:center"><span class="badge-proto">INTERNAL PREVIEW · NOT LIVE · A-C-99</span></div>
     </div>
   </section>
 
@@ -392,7 +381,7 @@ button,input{font-family:inherit}
         <div class="top-right">
           <span class="hello" id="honorific">您好，主申请人</span>
           <span class="pill" style="border-color:var(--gold-line);color:var(--gold)">永天伟／Keep Moving</span>
-          <span class="domain" id="domainLabel">ntrend.vip/status<em></em></span>
+          <span class="domain" id="domainLabel">ntrend.vip/status</span>
           <button class="btn btn-ghost" id="logoutBtn" type="button">退出</button>
         </div>
       </header>
@@ -452,7 +441,7 @@ button,input{font-family:inherit}
           <h3 id="policyTitle">—</h3>
           <p id="policySummary">—</p>
         </div>
-        <div class="policy-meta">更新 <span id="policyUpdated">—</span><em>占位</em></div>
+        <div class="policy-meta">更新 <span id="policyUpdated">—</span></div>
       </section>
 
       <!-- MATERIALS -->
@@ -486,19 +475,19 @@ button,input{font-family:inherit}
       <div class="lower">
         <section class="glass lower-card">
           <h3>本阶段建议</h3>
-          <div class="pub-badge" style="color:var(--status-need)">整理中</div>
+          <div class="pub-badge">本阶段 · 顾问摘要</div>
           <ol class="advice" id="adviceList"></ol>
         </section>
         <section class="glass lower-card">
           <h3>运营诊断摘要</h3>
-          <div class="pub-badge" style="color:var(--status-need)">整理中</div>
+          <div class="pub-badge">本阶段 · 顾问摘要</div>
           <p class="diag-text" id="diagText"></p>
         </section>
       </div>
 
       <footer class="footer">
         <div class="slogan">稳舵远航 · 身份有据</div>
-        <p class="disclaimer">本看板仅展示资料准备进度与内部整理建议，不构成任何获批承诺或结果保证。入境事务处最终审批结果以官方通知为准。HARTHELM｜家舵保留在约定情形下切断访问的权利。访问受密码保护。</p>
+        <p class="disclaimer">本看板仅展示资料准备进度与顾问整理建议，不构成任何获批承诺或结果保证。入境事务处最终审批结果以官方通知为准。HARTHELM｜家舵保留在约定情形下切断访问的权利。案例口径：累计接触与服务个案 1000 余个（不以获批计）。</p>
       </footer>
     </div>
   </section>
@@ -529,12 +518,12 @@ button,input{font-family:inherit}
     planDate:'2028-06-15', // 计划递交窗起点；窗 2028-06-15～07-15
     planDateLabel:'2028-06-15',
     planNote:'计划递交窗 2028-06-15～07-15（Kevin 已答；默认取窗内前段齐套）',
-    policyTitle:'高才通二续准备口径（内部示意摘要）',
-    policySummary:'本周无须对客强调的结构性清单变更示意。二续届满 2028-09-15，建议窗口约 2028-06-15 起预留核对与顾问终核时间。本条为内部占位摘要，非官方原文、不构成法律意见；',
+    policyTitle:'高才通身份维护准备口径（周更摘要）',
+    policySummary:'二续届满 2028-09-15，建议窗口约 2028-06-15 起预留核对与顾问终核时间。本条为示意摘要，非官方原文、不构成法律意见。',
     policyUpdated:'2026-11-05',
     visaExpiry:'2028-09-15',
     windowOpen:'约 2028-06-15',
-    latestRef:'待顾问／入境处口径填（本草稿不冒充官方）',
+    latestRef:'待顾问／入境处口径填（不冒充官方）',
     visaType:'高才通 B',
     caseId:'A-C-99',
     familyLabel:'有受养人 · 妻子·女儿',
@@ -572,7 +561,7 @@ button,input{font-family:inherit}
       '计划递交窗 2028-06-15～07-15；齐套锚 2028-06-15；届满 2028-09-15',
       'N2 ops 同步；Kevin裁定已离职仍股东（在职证明=旧件）；禁止造假留痕'
     ],
-    diag:'全流程真实模拟 · 老板测试客户 A-C-99。主申请人高才通 B（建档真名仅受限对照／画像）；上次延期已完成；现签证届满 2028-09-15；计划递交窗 2028-06-15～07-15。公司：永天伟国际科技有限公司／Keep Moving International Technology Co., Limited；业务进出口贸易与咨询；近12月1–6有／7–12无经营；ntrend.vip。家庭：妻子·女儿（同批办理；证件／姓名明文不上本板）。MPF近6月停；2026-04后无雇员；本人离职仍股东。2026-11-05收资已核实签证届满与公司名；银行／税审／MPF／同意书缺；雇佣已裁定：已离职仍股东（在职证明=旧件）。案例口径：累计接触与服务个案 1000 余个（不以获批计）。不构成获批承诺。'
+    diag:'全流程真实模拟 · 老板测试客户 A-C-99。主申请人高才通 B（建档真名仅受限对照／画像）；上次延期已完成；现签证届满 2028-09-15；计划递交窗 2028-06-15～07-15。公司：永天伟国际科技有限公司／Keep Moving International Technology Co., Limited；业务进出口贸易与咨询；近12月1–6有／7–12无经营；设计绑定域 ntrend.vip（未指 DNS/Pages）。家庭：妻子·女儿（同批办理；证件／姓名明文不上本板）。MPF近6月停；2026-04后无雇员；本人离职仍股东。2026-11-05收资已核实签证届满与公司名；银行／税审／MPF／同意书缺；雇佣已裁定：已离职仍股东（在职证明=旧件）。案例口径：累计接触与服务个案 1000 余个（不以获批计）。不构成获批承诺。'
   };
 
   let state = {
@@ -711,7 +700,7 @@ button,input{font-family:inherit}
     const board = state.board;
     app.dataset.board = 'keepmoving';
     $('honorific').textContent = board.honorific;
-    $('domainLabel').innerHTML = `${board.domain}<em></em>`;
+    $('domainLabel').textContent = board.domain;
 
     const prog = progressOf(board);
     $('ringFrac').textContent = `${prog.ok} / ${prog.total}`;
@@ -743,7 +732,7 @@ button,input{font-family:inherit}
       $('dateNote').textContent = board.planNote || '';
       const days = daysBetween(TODAY, parseYMD(board.planDate));
       daysEl.textContent = String(days);
-      daysEl.classList.toggle('pulse', days <= 30 && !applyReduceMotionClass());
+      daysEl.classList.remove('pulse');
       const hint = document.getElementById('daysHint');
       if(hint) hint.textContent = '';
     }
@@ -778,7 +767,6 @@ button,input{font-family:inherit}
     $('loginView').classList.remove('hidden');
     $('pwd').value = '';
   }
-
 
   const PASS_HASH = '0a035b709f942cad695b11c9f54c7b0db552f27dbbf53d0af40e0cd9d4fe006b';
   async function sha256hex(s){

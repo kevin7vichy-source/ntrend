@@ -3,10 +3,17 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-<title>HARTHELM｜家舵 · 永天伟／Keep Moving ops（A-C-99 ）</title>
+<!--
+  HARTHELM｜家舵 · Quiet Harbor N2 · 永天伟／Keep Moving · 公司运营看板
+  路径 /ops/ · 一客一板 · 客户自有主色（Keep Moving）
+  红线：不接真后台；空夹显示待索引／暂无；无证件号／完整薪金／BR完整号；不承诺获批。
+-->
+<title>HARTHELM｜家舵 · 永天伟／Keep Moving · 公司运营看板</title>
+<link rel="stylesheet" href="../assets/tokens.css"/>
 <style>
 :root{
+  /* Keep Moving brand family — aligned with ../assets/tokens.css */
+  --brand:#0C4A6E;
   --bg:#0B1220;
   --bg-elev:#111A2B;
   --glass:rgba(255,255,255,0.09);
@@ -29,7 +36,8 @@
   --shadow:0 8px 32px rgba(0,0,0,0.35);
   --font:"PingFang SC","Noto Sans SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,sans-serif;
   --mono:ui-monospace,"SF Mono","IBM Plex Mono","Menlo",Consolas,monospace;
-  --skyline-opacity:0.10;
+  --skyline-opacity:0.11;
+  --gold-weight:1px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font)}
@@ -39,13 +47,6 @@ button,input{font-family:inherit}
 .skyline svg{width:100%;height:100%;display:block}
 .app{position:relative;z-index:1;min-height:100vh}
 .wrap{max-width:1100px;margin:0 auto;padding:0 28px 48px}
-.proto-bar{
-  position:sticky;top:0;z-index:20;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  padding:8px 28px;background:rgba(8,12,20,0.92);border-bottom:1px solid var(--border-soft);
-  font-size:12px;color:var(--muted2);
-}
-.proto-bar strong{color:var(--status-need);font-weight:500}
 .login-view{min-height:calc(100vh - 40px);display:flex;align-items:center;justify-content:center;padding:40px 20px}
 .login-card{
   width:min(420px,100%);background:var(--glass-strong);border:1px solid var(--border);
@@ -157,21 +158,10 @@ button,input{font-family:inherit}
 .disclaimer{font-size:11px;color:var(--muted2);line-height:1.6;max-width:760px;margin:0 auto}
 .hidden{display:none !important}
 
-.freeze-banner{
-  position:sticky;top:0;z-index:9999;
-  background:linear-gradient(90deg,#7A1F1F 0%,#B33A2B 50%,#7A1F1F 100%);
-  color:#FFF5F0;
-  text-align:center;
-  padding:12px 16px;
-  font-size:14px;font-weight:600;letter-spacing:0.04em;
-  border-bottom:2px solid #E5A84B;
-  box-shadow:0 4px 18px rgba(0,0,0,0.45);
-}
-.freeze-banner span{display:block;font-size:12px;font-weight:500;opacity:.92;margin-top:4px;letter-spacing:0}
 
 </style>
 </head>
-<body>
+<body data-skin="dark">
 <svg class="skyline" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
   <path fill="currentColor" d="M0 140 V98 H40 V72 H52 V98 H70 V88 H88 V60 H98 V88 H120 V98 H150
     V55 H162 V40 H172 V55 H185 V98 H210 V70 H222 V50 H235 V70 H248 V98 H280
@@ -184,10 +174,6 @@ button,input{font-family:inherit}
     H1320 V55 H1335 V35 H1350 V55 H1365 V98 H1400 V80 H1420 V98 H1440 V140 Z"/>
 </svg>
 
-<div class="proto-bar">
-  <div>Quiet Harbor N2 ops · A-C-99 · <strong>ntrend.vip/ops/</strong></div>
-</div>
-
 <div class="app" id="app">
   <section class="login-view" id="loginView">
     <div class="login-card">
@@ -195,20 +181,19 @@ button,input{font-family:inherit}
         <div class="brand-en">HARTHELM</div>
         <div class="brand-zh">｜家舵</div>
       </div>
-      <p class="login-title">经营 ops 预览</p>
-      <p class="co-line">永天伟／Keep Moving · A-C-99</p>
+      <p class="login-title">公司运营看板</p>
+      <p class="co-line">永天伟／Keep Moving</p>
       <div class="lock-note">
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        示意登录 · 不接真后台账号
+        私密访问 · 仅授权人员
       </div>
       <div class="field">
-        <label for="pwd">访问密码（任意）</label>
+        <label for="pwd">访问密码</label>
         <input id="pwd" type="password" placeholder="请输入密码" autocomplete="off"/>
       </div>
       <p id="loginErr" style="display:none;color:#b91c1c;font-size:13px;text-align:center;margin:8px 0 0"></p>
-      <button class="btn btn-primary" id="loginBtn" type="button">进入 ops 预览</button>
+      <button class="btn btn-primary" id="loginBtn" type="button">进入看板</button>
       <p class="login-hint">请输入顾问提供的访问密码。<br/>本页仅作经营状态与合规节点索引，不构成任何获批承诺。</p>
-      <div style="text-align:center"><span class="badge-proto">INTERNAL PREVIEW · NOT LIVE · A-C-99</span></div>
     </div>
   </section>
 
@@ -217,11 +202,11 @@ button,input{font-family:inherit}
       <header class="topbar">
         <div class="top-left">
           <div class="brand-sm"><span class="en">HARTHELM</span><span class="zh">｜家舵</span></div>
-          <span class="pill"><span class="dot"></span>ops</span>
+          <span class="pill"><span class="dot"></span>密码保护 · 仅授权</span>
           <span class="pill gold">永天伟／Keep Moving</span>
         </div>
         <div class="top-right">
-          <span class="domain">ntrend.vip/ops/<em></em></span>
+          <span class="domain">ntrend.vip/ops/</span>
           <button class="btn btn-ghost" id="logoutBtn" type="button">退出</button>
         </div>
       </header>
@@ -237,13 +222,13 @@ button,input{font-family:inherit}
         <div class="meta-grid">
           <div class="meta-item"><span>公司代号</span><b>A-C-99-C1</b></div>
           <div class="meta-item"><span>有自雇</span><b>是 · 本人持股</b></div>
-          <div class="meta-item"><span>设计绑定域</span><b>ntrend.vip</b></div>
-          <div class="meta-item"><span>站路径</span><b>/ · /status/ · /ops/</b></div>
+          <div class="meta-item"><span>绑定域</span><b>ntrend.vip</b></div>
+          <div class="meta-item"><span>本板路径</span><b>/ops/</b></div>
         </div>
       </section>
 
       <div class="glass note-bar">
-        <strong>红线：</strong>不接真后台账号；不造假「已完成」合规节点；03_/04_ 空夹显示待索引／暂无；板面无证件号／护照号／完整薪金／BR 完整号；不承诺获批。
+        <strong>说明：</strong>本页只读索引经营状态与合规节点。空项显示「待索引／暂无」，不造假「已完成」。板面不含证件号／护照号／完整薪金／BR 完整号；不构成获批承诺。
       </div>
 
       <div class="grid3">
@@ -263,7 +248,7 @@ button,input{font-family:inherit}
 
         <section class="glass card">
           <h2>② 合规节点日历索引</h2>
-          <div class="kicker">示意节点 · 勿造假已完成</div>
+          <div class="kicker">节点索引 · 空＝待索引／暂无</div>
           <ul class="cal">
             <li>
               <div class="when">~2028-06-15</div>
@@ -296,7 +281,7 @@ button,input{font-family:inherit}
 
       <footer class="footer">
         <div class="slogan">稳舵远航 · 经营有据</div>
-        <p class="disclaimer">本 ops 页仅作内部经营状态与合规节点索引预览，不构成任何获批承诺或结果保证。不连接生产账密，不写回 Drive。入境事务处最终审批结果以官方通知为准。HARTHELM｜家舵。案例口径：累计接触与服务个案 1000 余个（不以获批计）。</p>
+        <p class="disclaimer">本页仅作经营状态与合规节点索引，不构成任何获批承诺或结果保证。不连接生产账密。入境事务处最终审批结果以官方通知为准。HARTHELM｜家舵。案例口径：累计接触与服务个案 1000 余个（不以获批计）。</p>
       </footer>
     </div>
   </section>
@@ -314,7 +299,6 @@ button,input{font-family:inherit}
     $('loginView').classList.remove('hidden');
     $('pwd').value = '';
   }
-
   const PASS_HASH = '0a035b709f942cad695b11c9f54c7b0db552f27dbbf53d0af40e0cd9d4fe006b';
   async function sha256hex(s){
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));

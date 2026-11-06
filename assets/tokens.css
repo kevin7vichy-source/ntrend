@@ -1,0 +1,61 @@
+/* Keep Moving / 永天伟 · A-C-99 shared design tokens
+   Brand derived 2026-11-06 from company name + trade/HK harbor feel
+   (no logo in 收资; Kevin: 客户自有主色; 金仅极细强调)
+*/
+:root {
+  /* Client brand family — shared light homepage + dark boards */
+  --brand: #0C4A6E;           /* Keep Moving primary — deep ocean navy */
+  --brand-deep: #083A56;
+  --brand-mid: #156089;
+  --accent: #1FA89A;          /* Keep Moving teal — shared accent */
+  --accent-bright: #2ED3C0;   /* board bright step */
+  --accent-dim: rgba(31, 168, 154, 0.18);
+  --gold: #B08D57;            /* hairline / label stroke only */
+  --gold-line: rgba(176, 141, 87, 0.55);
+
+  /* Typography family (三页同族) */
+  --font: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, Consolas, monospace;
+
+  /* Radii / weight */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --gold-weight: 1px;
+}
+
+/* Light skin (官网) */
+:root, [data-skin="light"] {
+  --bg: #F6F8FA;
+  --bg-elev: #FFFFFF;
+  --surface: #FFFFFF;
+  --ink: #0F172A;
+  --ink-soft: #334155;
+  --muted: #64748B;
+  --line: #E2E8F0;
+  --line-soft: #EEF2F6;
+  --wash: #E8F2F6;           /* brand soft wash */
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(12, 74, 110, 0.06);
+}
+
+/* Dark skin (看板 N1/N2) */
+[data-skin="dark"] {
+  --bg: #0B1220;
+  --bg-elev: #111A2B;
+  --glass: rgba(255, 255, 255, 0.09);
+  --glass-strong: rgba(255, 255, 255, 0.12);
+  --border: rgba(255, 255, 255, 0.14);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --text: #E8EEF7;
+  --muted: #9AA8BD;
+  --muted2: #6E7C91;
+  --accent: #2ED3C0;
+  --accent-dim: rgba(46, 211, 192, 0.22);
+  --gold-line: rgba(176, 141, 87, 0.62);
+  --status-need: #E5A84B;
+  --status-wait: #8B95A7;
+  --status-review: #5B9BD5;
+  --status-ok: #3CB371;
+  --status-na: #6E7C91;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --skyline-opacity: 0.11;
+}
